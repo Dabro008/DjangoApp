@@ -9,6 +9,7 @@ from goods.models import Categories, Products
 class CategoriesAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
+
 @admin.register(Products)
 class ProductsAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
