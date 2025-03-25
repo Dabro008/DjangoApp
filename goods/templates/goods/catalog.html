@@ -1,10 +1,7 @@
-{% extends "main/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% load goods_tags %}
 
-{% block css %}
-    <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
-{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -55,6 +52,7 @@
     <h3 class="mt-4">Результаты поиска по запросу {{ request.GET.q }}</h3>
     {% if not goods %}
         <h2 class="mt-4">По запросу ничего не найдено</h2>
+        <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
     {% endif %}
     {% endif %}
 
