@@ -1,11 +1,10 @@
-from email import message
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth, messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from users.forms import UserLoginForm, UserRegistrationForm, ProfileForm
+from users.forms import ProfileForm, UserLoginForm, UserRegistrationForm
 
 
 def login(request):
@@ -18,13 +17,17 @@ def login(request):
             if user:
                 auth.login(request, user)
                 messages.success(request, f"{username}, Вы вошли в аккаунт")
+
+                if request.POST.get('next', None):
+                    return HttpResponseRedirect(request.POST.get('next'))
+                    
                 return HttpResponseRedirect(reverse('main:index'))
     else:
         form = UserLoginForm()
 
     context = {
         'title': 'Home - Авторизация',
-        'form': form,
+        'form': form
     }
     return render(request, 'users/login.html', context)
 
@@ -36,7 +39,7 @@ def registration(request):
             form.save()
             user = form.instance
             auth.login(request, user)
-            messages.success(request, f"{user.username}, Вы успешно зарегистрировались и вошли в аккаунт")
+            messages.success(request, f"{user.username}, Вы успешно зарегистрированы и вошли в аккаунт")
             return HttpResponseRedirect(reverse('main:index'))
     else:
         form = UserRegistrationForm()
@@ -53,16 +56,20 @@ def profile(request):
         form = ProfileForm(data=request.POST, instance=request.user, files=request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, "Профиль успешно обновлен")
+            messages.success(request, "Профайл успешно обновлен")
             return HttpResponseRedirect(reverse('user:profile'))
     else:
         form = ProfileForm(instance=request.user)
 
     context = {
-        'title': 'Home - Кабинет', 
+        'title': 'Home - Кабинет',
         'form': form
     }
     return render(request, 'users/profile.html', context)
+
+def users_cart(request):
+    return render(request, 'users/users_cart.html')
+
 
 @login_required
 def logout(request):
